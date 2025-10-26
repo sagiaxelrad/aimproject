@@ -1,5 +1,8 @@
 import cv2
 import numpy as np
+import serial
+ser = serial.Serial('COM5', baudrate=9600)
+ser.write(b'hello com')
 A0 = 10000
 def main():
     cap = cv2.VideoCapture(0)  # 0 for webcam
@@ -28,17 +31,20 @@ def main():
                 cx = int(M["m10"] / M["m00"])
                 cy = int(M["m01"] / M["m00"])
                 cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
-            text = f"Area: {w*h} distance: {distance(w*h)} aim to: {direct(x,y,distance(w*h))}"
+
+            text = f"Area: {w*h} distance: {distance(w*h)} aim to: {direct(x,y,50*distance(w*h))}"
+            ser.write(
+                f"Area: {w * h} distance: {distance(w * h)} aim to: {direct(x, y, 50 * distance(w * h))}\n".encode())
             cv2.putText(frame, text, (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1, cv2.LINE_AA)
         cv2.imshow("Feed", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+    ser.close()
     cap.release()
     cv2.destroyAllWindows()
 def direct(x,y,r):
-    return (float(np.arctan(x/r)), float(np.arctan(y/r)))
+    return ((float(np.arctan(x/r))*180/3.1415)//1, (float(np.arctan(y/r))*180/3.1415)//1)
 def distance(s):
     return np.sqrt(A0/s)
 if __name__ == '__main__':
