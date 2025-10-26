@@ -1,6 +1,6 @@
 import serial
 
-ser = serial.Serial('COM3', baudrate=115200, timeout=1)
+ser = serial.Serial('COM5', baudrate=9600)
 
 ser.write(b'hello com')
 response = ser.readline()
