@@ -34,7 +34,9 @@ def main():
 
             text = f"Area: {w*h} distance: {distance(w*h)} aim to: {direct(x,y,50*distance(w*h))}"
             ser.write(
-                f"Area: {w * h} distance: {distance(w * h)} aim to: {direct(x, y, 50 * distance(w * h))}\n".encode())
+                f"{direct(x, y, 50 * distance(w * h))}\n".encode())
+            print(
+                f"{direct(x, y, 50 * distance(w * h))}\n")
             cv2.putText(frame, text, (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1, cv2.LINE_AA)
         cv2.imshow("Feed", frame)
